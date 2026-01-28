@@ -23,3 +23,5 @@ erl_crash.dump
 ex_cmd-*.tar
 
 .dir-locals.el
+
+/priv

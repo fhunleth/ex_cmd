@@ -11,7 +11,10 @@ defmodule ExCmd.MixProject do
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      compilers: Mix.compilers() ++ [:odu],
+      compilers: [:elixir_make] ++ Mix.compilers(),
+      make_targets: ["all"],
+      make_clean: ["mix_clean"],
+      make_error_message: "",
       aliases: aliases(),
 
       # Ensure dialyzer sees mix modules
@@ -49,22 +52,21 @@ defmodule ExCmd.MixProject do
     [
       maintainers: ["Akash Hiremath"],
       licenses: ["MIT"],
-      files: ~w(lib priv .formatter.exs mix.exs README* LICENSE* go_src),
+      files: ~w(lib priv .formatter.exs mix.exs README* LICENSE* c_src Makefile),
       links: %{GitHub: @scm_url}
     ]
   end
 
   defp aliases do
     [
-      format: [
-        "format",
-        "cmd --cd go_src/ go fmt"
-      ]
+      format: ["format"]
     ]
   end
 
   defp deps do
     [
+      {:elixir_make, "~> 0.6", runtime: false},
+
       # development & test
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},

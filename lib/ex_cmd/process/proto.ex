@@ -2,7 +2,6 @@ defmodule ExCmd.Process.Proto do
   @moduledoc false
 
   alias ExCmd.Log
-  alias Mix.Tasks.Compile.Odu
 
   @doc false
   defmacro send_input, do: 1
@@ -199,9 +198,11 @@ defmodule ExCmd.Process.Proto do
   end
 
   defp odu_path do
+    executable_name = if match?({:win32, _}, :os.type()), do: "odu.exe", else: "odu"
+    
     path =
       Application.app_dir(:ex_cmd, "priv")
-      |> Path.join(Odu.executable_name())
+      |> Path.join(executable_name)
 
     if !File.exists?(path) do
       raise ArgumentError, message: "'odu' executable not found"
