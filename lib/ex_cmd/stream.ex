@@ -201,11 +201,17 @@ defmodule ExCmd.Stream do
       Task.async(fn ->
         Process.change_pipe_owner(process, :stdin, self())
 
-        try do
-          write_fn.()
-        rescue
-          Error -> {:error, :epipe}
-        end
+        result =
+          try do
+            write_fn.()
+          rescue
+            Error -> {:error, :epipe}
+          end
+
+        # Close stdin to signal EOF to the process
+        Process.close_stdin(process)
+
+        result
       end)
     end
 
